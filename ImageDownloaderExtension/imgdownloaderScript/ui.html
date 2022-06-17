@@ -1,0 +1,317 @@
+<style>
+    .tyc-image-container{
+        position:fixed;
+        top:0px;
+        left:10%;
+        width:80vw;
+        z-index:2147483645;
+        background-color: #dedede;
+        border: 1px solid #aaa;
+        overflow:scroll;height:100%;
+    }
+
+    .tyc-image-container button{
+        border:1px solid #aaa;
+        border-radius:5px;
+        height:32px;line-height:32px;
+        margin:0px;padding:0 5px;
+    }
+
+    .tyc-image-container button:hover{
+        background-color: #f50;
+        color: #fff;
+    }
+
+    .control-section{
+        width:80vw;
+        z-index:2147483646;
+        position:fixed;
+        top:0px;
+        left:10%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;                
+        line-height:40px;
+        background:#eee;border:1px solid #aaa;border-radius:2px;                
+    }
+
+    .control-section-sub{
+        display: flex;
+        margin-bottom: 5px;               
+    }
+
+    .tyc-normal-section{
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: flex-start;    
+        flex-wrap: nowrap;            
+        align-content: normal;
+
+    }
+    .btn-download{
+        border:1px solid #aaa;border-radius:5px;
+        height:32px;line-height:32px;
+        margin:0px;padding:0 5px;
+    }
+    .btn-zipDownload{
+        border:1px solid #aaa;border-radius:5px;
+        height:32px;line-height:32px;
+        margin:0px;padding:0 5px;
+    }
+    .btn-close{
+        font-size:20px;position:absolute;
+        right:30px;top:4px;
+        height:32px;line-height:32px;
+        margin:0px;
+        border-radius:10px;border:1px solid #aaa;
+        width:30px;
+    }
+
+    .tyc-image-wrapper{
+        margin-top:82px;display:flex;justify-content:center;
+        align-items:center;flex-wrap:wrap;
+    }
+
+    .tyc-input-checkbox{
+        background-color: initial;
+        cursor: default;
+        appearance: auto;
+        box-sizing: border-box;
+        margin: 3px 3px 3px 4px;
+        padding: initial;
+        border: initial;
+    }
+
+    .tyc-extend-set{
+        padding: 10px;
+        border-top: 1px solid rgba(100,100,100,0.1);
+    }
+
+    .tyc-extend-set{
+        display: none;
+        align-items: stretch;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        padding: 5px;
+        width: auto;
+    }
+
+    .tyc-extend-set-container{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        align-content: normal;
+        border: 1px solid rgba(100,100,100,0.5);
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    .tyc-autobigimg-set{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        align-content: normal;
+        border: 1px solid rgba(100,100,100,0.5);
+        padding: 5px;
+    }
+
+    .tyc-set-domain{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        align-content: normal;
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid rgba(100,100,100,0.3);
+        width: 95%;
+        max-height: 150px;
+        overflow: scroll;
+    }
+
+    .tyc-abi-title{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .tyc-abi-domain-title{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 95%;
+        border-bottom: 1px solid #ddd;
+    }
+    .tyc-set-replacerule{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 3px;
+        flex-wrap: wrap;
+    }
+
+    .tyc-set-replacerule *,.tyc-set-replacerule button{
+        margin-left: 5px;
+    }
+
+    .tyc-set-domain-default{
+        height: 200px;
+        overflow: scroll;
+        display: none;
+    }
+</style>
+<div class="tyc-image-container">
+    <div class="control-section">
+        <div class="control-section-sub tyc-normal-section">
+            <input class="select-all tyc-input-checkbox" type="checkbox" name="select-all" value="select-all">${langSet.selectAll}
+            <button class="btn-download" style="margin-left:5px;">${langSet.downloadBtn}</button> 
+            <button class="btn-zipDownload" style="margin-left:5px;">${langSet.zipDownloadBtn}</button> 
+            <span style="margin-left:10px;" class="num-tip">${langSet.fetchDoneTip1}${imgUrls.length}${langSet.fetchDoneTip2}</span>
+            <button cstyle="margin-left:10px;" class="btn-close" >X</button>
+        </div>
+
+    
+        <div style="line-height:12px;" class="control-section-sub tyc-normal-section">
+            <div style="float:left;display:block;">
+            <input type="checkbox" class="width-check img-check tyc-input-checkbox" name="width-check" value="width-check">Width:
+            <input type="text" class="width-value-min" size="1" style="height:15px;width:50px;"
+                min="0" max="9999" value="0">-
+                <input type="text" class="width-value-max" size="1" style="height:15px;width:50px;"
+                min="0" max="9999" value="3000">
+            </div>
+    
+            <div style="float:left;margin-left:30px;display:block;">
+                <input type="checkbox" class="height-check img-check tyc-input-checkbox" name="height-check" value="height-check">Height:
+                <input type="text" class="height-value-min" size="1" style="height:15px;width:50px;"
+                    min="0" max="9999" value="0">-
+                    <input type="text" class="height-value-max" size="1" style="height:15px;width:50px;"
+                    min="0" max="9999" value="3000">
+            </div>
+    
+            <div style="float:left;margin-left:30px;display:block;" class="tyc-cors">
+                <span class="tyc-tip" style="display: none;
+                position: absolute;
+                top: 5px;
+                left: 50px;
+                white-space: nowrap;
+                background: rgb(204, 204, 204);
+                border: 1px solid rgb(150, 150, 150);
+                border-radius: 3px;
+                padding: 5px;">勾选使用zip下载后，会请求跨域权限，否则zip下载基本下载不到图片。
+                </span>        
+                <input type="checkbox" class="cors-check img-check tyc-input-checkbox" name="cors-check" value="cors-check">
+                <span>使用zip下载</span>     
+            </div>
+
+            <div style="float:left;margin-left:30px;display:block;" class="tyc-download-url">
+                <button class="tyc-download-url-btn">下载地址文件</button>
+            </div>
+
+            
+            <div style="float:left;margin-left:30px;display:block;" class="tyc-extend-btn">
+                <span>更多设置 </span>
+                <span style="top: 3px;position: relative;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </span> 
+            </div>
+        </div>
+        <div class="tyc-extend-set control-section-sub">
+            <div class="tyc-autobigimg-set tyc-extend-set-container">
+                <div class="tyc-abi-title">  
+                    <div>
+                        自动大图设置模块
+                    </div> 
+                    <div>
+                        <button class="tyc-default-rule-show">设置默认规则</button>
+                    </div>
+
+                    <div>
+                        <button>导出自定规则</button>
+                    </div>
+
+                    <div>
+                        <input type="file" id="tycfileElem" multiple accept="text/plain" style="display:none">
+                        <button id="tyc-file-select">导入自定规则</button>
+                    </div>
+                    
+                </div>
+                <div class="tyc-set-domain tyc-set-domain-custom">
+                </div>
+                <div class="tyc-set-domain tyc-set-domain-default">
+                </div>
+            </div> 
+       
+        </div>
+    </div>
+    <div class="tyc-image-wrapper" >
+    </div>
+</div>
+
+    <script>
+
+        let arr1=[            
+            {originReg:/(?<=(.+sinaimg\.(?:cn|com)\/))([\w\.]+)(?=(\/.+))/i,replacement:"large",tip:"用于新浪微博"},
+            {originReg:/(?<=(.+alicdn\.(?:cn|com)\/.+\.(jpg|jpeg|gif|png|bmp|webp)))_.+/i,replacement:"",tip:"用于淘宝系网站"},
+            {originReg:/(.+alicdn\.(?:cn|com)\/.+)(\.\d+x\d+)(\.(jpg|jpeg|gif|png|bmp|webp)).*/i,replacement:(match,p1,p2,p3)=>p1+p3,tip:"用于1688"},
+            {originReg:/(?<=(.+360buyimg\.(?:cn|com)\/))(\w+\/)(?=(.+\.(jpg|jpeg|gif|png|bmp|webp)))/i,replacement:"n0/",tip:"用于京东"},
+            {originReg:/(?<=(.+hdslb\.(?:cn|com)\/.+\.(jpg|jpeg|gif|png|bmp|webp)))@.+/i,replacement:"",tip:"用于B站"},
+        ];
+
+
+        document.querySelector(".tyc-extend-btn").onclick=e=>{
+            if(document.querySelector(".tyc-extend-btn").classList.contains("extend-open")){
+                document.querySelector(".tyc-extend-btn").classList.remove("extend-open");
+                document.querySelector(".tyc-extend-set").style.display="none";
+                document.querySelector(".tyc-extend-btn").style.color="black";
+                document.querySelector(".tyc-extend-btn").innerHTML=`<span>更多设置 </span>
+                <span style="top: 3px;position: relative;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </span> `
+                ;
+            }else{
+                document.querySelector(".tyc-extend-btn").classList.add("extend-open");
+                document.querySelector(".tyc-extend-set").style.display="flex";
+                document.querySelector(".tyc-extend-btn").style.color="#f50";
+                document.querySelector(".tyc-extend-btn").innerHTML=`<span>收起 </span>
+                <span style="top: 3px;position: relative;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
+                    <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                    </svg>
+                </span> `
+
+            }
+        }
+
+        async function test(){
+            //console.log(JSON.stringify(arr1));
+            var a=JSON.stringify(arr1)
+            //console.log(a);
+            
+            
+
+            var blob = new Blob(['adfdfff,ddfdffff','sdfdlsfjldsfjl'], {type: "text/plain;charset=utf-8"});
+            var text=await blob.text()
+            console.log(text);
+        }
+
+        //[{"originReg":{},"replacement":"large","tip":"用于新浪微博"},{"originReg":{},"replacement":"","tip":"用于淘宝系网站"},{"originReg":{},"tip":"用于1688"},{"originReg":{},"replacement":"n0/","tip":"用于京东"},{"originReg":{},"replacement":"","tip":"用于B站"}]
+    </script>
+    
