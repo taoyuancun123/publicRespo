@@ -1,7 +1,7 @@
 {
   "name": "Image Downloader",
   "description": "Images can be extracted and batch downloaded from most websites. Especially for websites the right click fails or image cant save",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"

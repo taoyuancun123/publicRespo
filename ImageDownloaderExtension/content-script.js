@@ -2,7 +2,7 @@
     'use strict';
  
     var lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
-    var langSet;
+    var langSet;    
     var localization = {
         zh: {
             selectAll: "全选",
@@ -16,6 +16,19 @@
             fetchDoneTip1:"已选(0/",
             fetchDoneTip1Type2:"已选(",
             fetchDoneTip2:")张图片",
+            regRulePlace:"输入待替换正则",
+            regReplacePlace:"输入替换它的字符串或者函数",
+            zipOptionDesc:"勾选使用zip下载后，会请求跨域权限，否则zip下载基本下载不到图片。",
+            zipCheckText:"使用zip下载",
+            downloadUrlFile:"下载图片地址",
+            moreSetting:"更多设置",
+            autoBitImgModule:"自动大图设置模块",
+            defaultSettingRule:"设置默认规则",
+            exportCustomRule:"导出自定规则",
+            importCustomRule:"导入自定规则",
+            fold:"收起",
+            inputFilenameTip:"输入文件名",
+ 
         },
         en: {
             selectAll: "selectAll",
@@ -29,6 +42,18 @@
             fetchDoneTip1:"(0/",
             fetchDoneTip1Type2:"(",
             fetchDoneTip2:") Images selected",
+            regRulePlace:"enter reg express",
+            regReplacePlace:"enter replace string or function",
+            zipOptionDesc:"when zip option checked,will request cors right,otherwise zipDownload can not get pics",
+            zipCheckText:"Use ZipDownload",
+            downloadUrlFile:"Download Imgs Url",
+            moreSetting:"More Setting",
+            autoBitImgModule:"AutoBigImageModule",
+            defaultSettingRule:"SetDefaultRule",
+            exportCustomRule:"exportCustomRule",
+            importCustomRule:"importCustomRule",
+            fold:"fold",
+            inputFilenameTip:"input filename",
         }
     }
  
@@ -46,6 +71,9 @@
             {originReg:/(.+alicdn\.(?:cn|com)\/.+)(\.\d+x\d+)(\.(jpg|jpeg|gif|png|bmp|webp)).*/i,replacement:(match,p1,p2,p3)=>p1+p3,tip:"用于1688"},
             {originReg:/(?<=(.+360buyimg\.(?:cn|com)\/))(\w+\/)(?=(.+\.(jpg|jpeg|gif|png|bmp|webp)))/i,replacement:"n0/",tip:"用于京东"},
             {originReg:/(?<=(.+hdslb\.(?:cn|com)\/.+\.(jpg|jpeg|gif|png|bmp|webp)))@.+/i,replacement:"",tip:"用于B站"},
+            {originReg:/th(\.wallhaven\.cc\/)(?!full).+\/(\w{2}\/)([\w\.]+)(\.jpg)/i,replacement:(match,p1,p2,p3)=>"w"+p1+"full/"+p2+"wallhaven-"+p3+".jpg",tip:"用于wallhaven"},
+            {originReg:/th(\.wallhaven\.cc\/)(?!full).+\/(\w{2}\/)([\w\.]+)(\.jpg)/i,replacement:(match,p1,p2,p3)=>"w"+p1+"full/"+p2+"wallhaven-"+p3+".png",tip:"用于wallhaven"},
+ 
         ],
         defaultRulesChecked:[           
         ],
@@ -61,7 +89,10 @@
             tempArray.forEach(replaceByReg);
             function replaceByReg(urlStr,urlIndex){
                 //if(!urlStr)return;
-                if(urlStr.includes("data:image/"))return;
+                if(urlStr.includes("data:image/")){
+                    that.bigImageArray.push(urlStr);
+                    return;
+                }
                 that.defaultRules.forEach((rule,ruleIndex)=>{
                     if(that.defaultRulesChecked[ruleIndex]!=="checked"){
                         that.bigImageArray.push(urlStr);
@@ -105,8 +136,8 @@
             this.defaultRules.forEach((v,i)=>{
                 let rulesHtml=`<div class="tyc-set-replacerule">                        
                             <input type="checkbox" name="active" class="tyc-default-active" ${that.defaultRulesChecked[i]}>
-                            <input type="text" name="regrule" placeholder="输入待替换正则" class="tyc-search-title" value="${v.originReg}">
-                            <input type="text" name="replace" placeholder="输入替换它的字符串或者函数" class="tyc-search-url" value="${v.replacement}">
+                            <input type="text" name="regrule" placeholder="${langSet.regRulePlace}" class="tyc-search-title" value="${v.originReg}">
+                            <input type="text" name="replace" placeholder="${langSet.regReplacePlace}" class="tyc-search-url" value="${v.replacement}">
                             <span class="tyc-default-tip">${v.tip}</span>                        
                     </div>
                 `
@@ -125,8 +156,8 @@
                 //console.log(that[checkType])
                 let rulesHtml=`<div class="tyc-set-replacerule">                        
                             <input type="checkbox" name="active" class="${checkClassName}" ${that[checkType][i]}>
-                            <input type="text" name="regrule" placeholder="输入待替换正则" class="tyc-search-title" value="${v.originReg}">
-                            <input type="text" name="replace" placeholder="输入替换它的字符串或者函数" class="tyc-search-url" value="${v.replacement}">
+                            <input type="text" name="regrule" placeholder="${langSet.regRulePlace}" class="tyc-search-title" value="${v.originReg}">
+                            <input type="text" name="replace" placeholder="${langSet.regReplacePlace}" class="tyc-search-url" value="${v.replacement}">
                             <span class="tyc-default-tip">${v.tip}</span>                        
                     </div>
                 `
@@ -172,6 +203,14 @@
         setRulesChecked(){
             if(GM_getValue("defaultRulesChecked")){
                 this.defaultRulesChecked=GM_getValue("defaultRulesChecked");
+                
+                if(this.defaultRulesChecked.length<this.defaultRules.length){
+                    let delta=this.defaultRules.length-this.defaultRulesChecked.length;
+                    for(let i=0;i<delta;i++){
+                        this.defaultRulesChecked.push("checked");
+                    }
+                }
+ 
             }else{
                 this.defaultRules.forEach(v=>{
                     this.defaultRulesChecked.push("checked");
@@ -180,8 +219,7 @@
             }
  
             if(GM_getValue("userRulesChecked")&&GM_getValue("userRulesChecked").length>0){
-                this.userRulesChecked=GM_getValue("userRulesChecked");
-                
+                this.userRulesChecked=GM_getValue("userRulesChecked");                
             }else{
                 this.userRules.forEach(v=>{
                     this.userRulesChecked.push("checked");
@@ -220,11 +258,19 @@
  
         }
     }
+
+    var domainName=document.domain.split(".");
+    var downloadFileName;
+
  
     GM_registerMenuCommand(langSet.downloadMenuText, wrapper);
     hotkeys('alt+w', wrapper);
  
-    function wrapper() {  
+    function wrapper() {
+        downloadFileName=domainName[domainName.length-2];
+        var timeStamp=new Date().getTime().toString();
+        downloadFileName=downloadFileName+timeStamp.substring(7,timeStamp.length);
+
         try {
             document.querySelector(".tyc-image-container").remove();
         } catch { 
@@ -252,6 +298,7 @@
         try {
             let imgEles = document.getElementsByTagName("img");
             let canvasEles=document.getElementsByTagName("canvas");
+            //console.log(canvasEles);
  
             for (let i = 0; i < imgEles.length; i++) {
                 ////console.log(imgEles[i].src);
@@ -264,12 +311,19 @@
  
             let imgRegs = bodyStr.match(/(?<=background-image:\s*url\()(\S+)(?=\))/g);
  
-            for (let i = 0; i < imgRegs.length; i++) {
-                ////console.log(imgRegs[i]);
-                if (!imgUrls.includes(imgRegs[i].replace(/&quot;/g, ""))) {
-                    imgUrls.push(imgRegs[i].replace(/&quot;/g, ""));
+            try{
+                for (let i = 0; i < imgRegs.length; i++) {   
+                    ////console.log(imgRegs[i]);
+                    if(imgRegs[i].includes('&quot;')){
+                        imgUrls.push(imgRegs[i].replace(/&quot;/g, ""));
+                    }else if(imgRegs[i].includes("'")){
+                        imgUrls.push(imgRegs[i].replace(/'/g, ""));
+                    }
                 }
+            }catch(e){
+                console.log(e);
             }
+ 
  
             if (window.location.href.includes("hathitrust.org")) {
                 let imgs = document.querySelectorAll(".image img");
@@ -301,11 +355,13 @@
  
             let oldLength=imgUrls.length;
             if(canvasEles.length>0){ 
+                //console.log(canvasEles);
                 fetchTip=langSet.fetchTip;
                 var completeFlag=0;                
                 for(let j=0;j<canvasEles.length;j++){                    
                     canvasEles[j].toBlob(blobCallback);    
                     function blobCallback(blob){
+                        //console.log(blob);
                         let oFileReader = new FileReader();
                         oFileReader.onloadend = function (e) {
                             let base64 = e.target.result;                                 
@@ -313,6 +369,7 @@
                                 if (!imgUrls.includes(base64)) {                                
                                     //imgUrls.push(base64);                                
                                     imgUrls[oldLength+j]=base64;
+                                    //console.log(base64);
                                 }
                                 completeFlag++;                                                         
                                 document.querySelector(".num-tip").innerText=`${langSet.fetchCount1} ${completeFlag}/${canvasEles.length} ${langSet.fetchCount2}`;                                      
@@ -330,8 +387,9 @@
                 fetchTip=`${langSet.fetchDoneTip1}${imgUrls.length}${langSet.fetchDoneTip2}`;
             }           
  
-        } catch {
+        } catch(e) {
             //alert("error");
+            console.log(e);
         }
  
         let imgContainer = `<style>
@@ -514,6 +572,7 @@
                 <button class="btn-download" style="margin-left:5px;">${langSet.downloadBtn}</button> 
                 <button class="btn-zipDownload" style="margin-left:5px;">${langSet.zipDownloadBtn}</button> 
                 <span style="margin-left:10px;" class="num-tip">${langSet.fetchDoneTip1}${imgUrls.length}${langSet.fetchDoneTip2}</span>
+                <input type="text" class="tyc-file-name" style="height:15px;width:80px;margin-left:25px;font-size:10px;" value="${downloadFileName}">
                 <button cstyle="margin-left:10px;" class="btn-close" >X</button>
             </div>
     
@@ -544,19 +603,19 @@
                     background: rgb(204, 204, 204);
                     border: 1px solid rgb(150, 150, 150);
                     border-radius: 3px;
-                    padding: 5px;">勾选使用zip下载后，会请求跨域权限，否则zip下载基本下载不到图片。
+                    padding: 5px;">${langSet.zipOptionDesc}
                     </span>        
                     <input type="checkbox" class="cors-check img-check tyc-input-checkbox" name="cors-check" value="cors-check">
-                    <span>使用zip下载</span>     
+                    <span>${langSet.zipCheckText}</span>     
                 </div>
     
                 <div style="float:left;margin-left:30px;display:block;" class="tyc-download-url">
-                    <button class="tyc-download-url-btn">下载地址文件</button>
+                    <button class="tyc-download-url-btn">${langSet.downloadUrlFile}</button>
                 </div>
     
                 
                 <div style="float:left;margin-left:30px;display:block;" class="tyc-extend-btn">
-                    <span>更多设置 </span>
+                    <span>${langSet.moreSetting} </span>
                     <span style="top: 3px;position: relative;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -569,19 +628,19 @@
                 <div class="tyc-autobigimg-set tyc-extend-set-container">
                     <div class="tyc-abi-title">  
                         <div>
-                            自动大图设置模块
+                            ${langSet.autoBitImgModule}
                         </div> 
                         <div>
-                            <button class="tyc-default-rule-show">设置默认规则</button>
+                            <button class="tyc-default-rule-show">${langSet.defaultSettingRule}</button>
                         </div>
  
                         <div>
-                        <button>导出自定规则</button>
+                        <button>${langSet.exportCustomRule}</button>
                     </div>
  
                         <div>
                             <input type="file" id="tycfileElem" multiple accept="text/plain" style="display:none">
-                            <button id="tyc-file-select">导入自定规则</button>
+                            <button id="tyc-file-select">${langSet.importCustomRule}</button>
                         </div>
                         
                     </div>
@@ -677,8 +736,9 @@
                     filename = path;
                 }
                 //console.log("download start" + path + " " + filename);
-                //GM_download(path, "pic");
-                saveAs(path,"pic")
+                //GM_download(path, "pic"); 
+                let saveFileName=document.querySelector(".tyc-file-name").value||"pic";                  
+                saveAs(path,saveFileName);
             } else if (e.target.classList[1] == "bi-check" || e.path.find(isSelect) != undefined) {
                 let checkSvg = e.path.find((ele) => ele.classList[1] === "bi-check");
                 let currentImgIndex = parseInt(checkSvg.dataset.value);
@@ -715,7 +775,7 @@
                     //let filename = `pic-${index}.jpg`;
                     //filename=filename.replace(/\\/g, '/').replace(/\/{2,}/g, '/');
                     //await GM_download(img, `pic-${index}`);
-
+ 
                 }); */
                 function sleep(){
                     return new Promise((resolve,reject)=>{
@@ -726,8 +786,9 @@
                 }
                 for(let i=0;i<imgWaitDownload.length;i++){
                     await sleep();
-                    console.log(`pic-${i}`);
-                    saveAs(imgWaitDownload[i],`pic-${i}`);
+                    let saveFileName=document.querySelector(".tyc-file-name").value||"pic";   
+                    console.log(`${saveFileName}-${i}`);                    
+                    saveAs(imgWaitDownload[i],`${saveFileName}-${i}`);
                 }
             } else {
                 alert(`${langSet.selectAlert}`);
@@ -742,14 +803,16 @@
                     zipImgWaitDownload.forEach(async (img, index) => {
                         let fileExt = img.substring(img.indexOf("image/") + 6, img.indexOf(";"))
                         fileExt=fileExt.includes("svg")?"svg":fileExt;
-                        let filename = `pic${index}.${fileExt}`;  
+                        let saveFileName=document.querySelector(".tyc-file-name").value||"pic";
+                        let filename = `${saveFileName}-${index}.${fileExt}`;  
                         zipSubFoler.file(filename, img.split(",")[1], { base64: true });                        
                     });
      
                     zipFolder.generateAsync({ type: "blob" })
                         .then(function (content) {
                             // see FileSaver.js
-                            saveAs(content, "pics.zip");
+                            let saveFileName=document.querySelector(".tyc-file-name").value||"pic";
+                            saveAs(content, `${saveFileName}s.zip`);
                             zipFolder.remove("pics");
                             zipSubFoler = zipFolder.folder('pics');
                         });
@@ -825,7 +888,7 @@
                 document.querySelector(".tyc-extend-btn").classList.remove("extend-open");
                 document.querySelector(".tyc-extend-set").style.display="none";
                 document.querySelector(".tyc-extend-btn").style.color="black";
-                document.querySelector(".tyc-extend-btn").innerHTML=`<span>更多设置 </span>
+                document.querySelector(".tyc-extend-btn").innerHTML=`<span>${langSet.moreSetting}</span>
                 <span style="top: 3px;position: relative;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -837,7 +900,7 @@
                 document.querySelector(".tyc-extend-btn").classList.add("extend-open");
                 document.querySelector(".tyc-extend-set").style.display="flex";
                 document.querySelector(".tyc-extend-btn").style.color="#f50";
-                document.querySelector(".tyc-extend-btn").innerHTML=`<span>收起 </span>
+                document.querySelector(".tyc-extend-btn").innerHTML=`<span>${langSet.fold} </span>
                 <span style="top: 3px;position: relative;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
@@ -857,13 +920,13 @@
         document.querySelector("#tycfileElem").onchange=autoBigImage.getCustomRules;
  
         document.querySelector(".tyc-download-url-btn").onclick=e=>{
-            let blob=new Blob([imgUrls.join("\n")],{ type: "text/plain", endings: "native" });
+            let blob=new Blob([imgWaitDownload.join("\n")],{ type: "text/plain", endings: "native" });
             saveAs(blob,"urls.txt");
         }
  
  
         init();
-        function init() {            
+        function init() {                     
             filteredImgUrls = imgUrls;
             filteredImgUrls=autoBigImage.getBigImageArray(filteredImgUrls);
             getSavedValue();
