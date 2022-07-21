@@ -1,55 +1,50 @@
-# publicRespo
-public respository
+<h3>使用方法</h3>
+<h5>基本使用</h5>
+打开脚本页面的三种方式，
+一，快捷键，alt+w，有妖气、腾讯漫画、b站等网站最好用这种方式打开
+二，点击右键-tampermonkey选项-图片下载器-打开脚本
+三，页面右上角扩展显示区，点击油猴图标-点击“图片下载器-打开图片”
 
-<a href="https://www.youtube.com/channel/UC8c0w79AjpfzL7gLrDLOahg" target="_blank">Follow me in youtube</a>-Real Chinese scenery and people
-<h3>How to use</h3>
-<h5>Basic usage</h5>
-There are three ways to open the script page,
+<h5>新功能</h5>
+修正tumblr,instagram等使用srcset的网站，抓取不到srcset中图片地址的问题。
 
-1. Shortcut keys, alt+w, it is best to use this method to open websites such as Yaoqi, Tencent Comics, B station, etc.
+<h5>扩展功能</h5>
+<h6>修改快捷键</h6>
+现在可以自定义快捷键了，默认还是alt+w，你也可以修改成你需要的快捷键。在极少数网站设置快捷键会无效（如instagram）,这时候到其他网站去修改，刷新后就可以在该网站生效了。
 
-2. right click - tampermonkey option - image downloader - open script
+<h6>修改下载文件名</h6>
+脚本会自动生成一个域名+时间戳的下载文件名，您也可以手动修改成你需要的文件名。
 
-3. Expand the display area in the upper right corner of the page, click the oil monkey icon - click "picture downloader - open picture"
-
-
-<h5>New Feature</h5>
-fiex the bug that can not fetch the url in the srcset,such like tumblr/instagram.
-
-<h5>Extended Features</h5>
-<h6>Modify shortcut keys</h6>
-Now you can customize the shortcut keys, the default is still alt+w, you can also modify the shortcut keys you need. In very few websites, setting shortcut keys will be invalid (such as instagram). At this time, go to other websites to modify, and after refreshing, it can take effect on that website.
-
-<h6>Modify download file name</h6>
-The script will automatically generate a download file name with a domain name + timestamp, you can also manually modify it to the file name you need.
-
-<h6>zip download</h6>
-Using zip download, you can compress and pack all pictures into a zip file for download, so when you download multiple pictures, you only need to download a zip package, and you do not need to open a download link for each picture.
-Now a zip download option has been added, which is disabled by default. If you do not use zip download, you do not need to open this option.
-Turning on the zip option will require a cross-domain request. Most images cannot be packaged into a zip package without cross-domain. It is recommended to allow all domain names to cross domains after each update of the script, and the script is open source.
-<h6>Auto-enlarge image</h6>
-When there are multiple specifications of pictures in the website, the large picture/original picture is automatically obtained. When obtaining, the original picture displayed on the website will be retained, and the corresponding large picture will also be automatically obtained.
-<b>Manual configuration</b>
-Write a txt file, then write the rules in the following format, and then use "Import Custom Rules" to import
-[
-            {originReg:/(?<=(.+sinaimg\.(?:cn|com)\/))([\w\.]+)(?=(\/.+))/i,replacement:" large",tip:"for Sina Weibo"},
+<h6>zip下载</h6>
+使用zip下载，可以将所有图片压缩打包成一个zip文件下载，这样下载多个图片的时候，就只需要下载一个zip包就可以了，不需要每张图片都打开一个下载链接。
+现在增加了一个zip下载选项，默认关闭，不使用zip下载，不需要打开这个选项。
+打开zip选项，会需要跨域请求，不跨域大部分图片是无法打包到zip包里的。建议每次更新脚本后允许所有域名跨域，脚本都是开源的。
+<h6>自动大图</h6>
+在网站中有多规格图片的时候，自动获取大图/原图。获取的时候，会保留网站原本显示的图片，也会自动获取对应的大图。
+<b>手动配置</b>
+写一个txt文件，然后按如下格式写规则，再用“导入自定规则”导入即可
+[            
+            {originReg:/(?<=(.+sinaimg\.(?:cn|com)\/))([\w\.]+)(?=(\/.+))/i,replacement:"large",tip:"用于新浪微博"},            
 ]
-The outside is an array, the inside is an object, originReg corresponds to a parameter of the replace function, replacement corresponds to the second parameter of the replace function, and tip is a prompt description
-<b>List of websites that support automatic large images by default</b>
-I wrote it in the script, the default list of websites that support automatic large pictures, you are also welcome to leave a message in the feedback area to add more automatic large picture websites
-weibo.com, Taobao websites (taobao.com, tmall.com, aliexpress.com, 1688.com), jd.com, bilibili.com, wallhaven.cc
+外面是一个数组，里面是对象，originReg对应replace函数的一个参数，replacement对应replace函数的第二个参数，tip是提示说明
+<b>默认支持自动大图的网站列表</b>
+我在脚本里写好了的，默认支持自动大图的网站列表，也欢迎大家在反馈区留言，增加更多的自动大图网站
+weibo.com，淘宝系网站（taobao.com、tmall.com、aliexpress.com、1688.com），jd.com，bilibili.com，wallhaven.cc
 
-<h6>Export image address</h6>
-It is best to remove the zip download option when exporting the image url, otherwise the exported address has been converted to base64 format, so the file will be very large.
+<h6>导出图片地址</h6>
+导出图片地址最好将zip下载选项去掉，要不然导出的是已经转化为base64格式的地址，这样文件会非常大
 
 
-<h3>Additional Notes</h3>
-First, it is currently only suitable for the combination of chrome+tampermonkey, the chromium kernel used by the edge browser, I have tried several websites, and most of them should be fine. There is a good chance that other combinations are problematic. Because the adaptation is too troublesome, there is no plan to make other combinations of adaptations for the time being.
-Second, the script can run on all websites, but each website has different strategies and the results of running are also different. Therefore, <b>for feedback, you need to bring a specific website, preferably a specific webpage</b>
-Three, comics download, I have tried B station and Tencent comics, and they are demonic.
-
-<h3>Version History</h3>
-1.29--The script basically has various functions
-1.62--Added and improved the zip download function, you can pack the pictures into a zip package to download all the pictures at one time, instead of downloading them one by one.
-1.65--Added download functions such as Yaoqi, Tencent Comics, Bilibili Comics, etc.
-1.96--Add automatic large image support, and support importing custom automatic large image rule configuration
+<h3>其他注意事项</h3>
+一，目前只适合chrome+tampermonkey的组合，edge浏览器用的chromium内核，我试过几个网站，大部分应该没问题。其他组合有问题的可能性很大。因为适配太麻烦，暂时没计划弄其他组合的适配。
+二，脚本可以在所有网站运行，但是每个网站策略不同，运行的结果也不同。所以，<b>反馈问题，需要带具体的网站，最好是具体的网页</b>
+三，漫画下载，目前试过b站、腾讯漫画，有妖气。
+<b>注意：</b>
+已经可以下载b站漫画了。b站漫画有两种阅读模式：
+一种是一次性载入许多话，因为一次加载了太多图片,需要在打开脚本后再异步获取图片。但下载很爽，只要拖到底，把所有图片载入，就可以一次性下载几十话。（没拖到底的时候，会有许多空白的大图片，所以要下载就要自己手动拖动一下，拖到底之后，再打开脚本页面下载）。加载慢，也是因为b站在图片上加了一层canvas，需要先破解他的canvas限制，才能下载，正常的网站就算图片再多都不会导致打开脚本页面很慢。
+第二种就是，当前阅读的这一话，才会显示，之前阅读的会销毁，之后的也不会预加载。这种阅读模式，打开脚本和其他网站一样快，但是一次只能下载一两页漫画。
+<h3>版本记录</h3>
+1.29--脚本基本具有常规各类功能
+1.62--增加并完善了zip下载功能，可以将图片打包成一个zip包一次性下载所有图片，不用一张一张下载。
+1.65--增加有妖气、腾讯漫画、B站漫画等下载功能
+1.96--增加自动大图支持，并支持导入自定自动大图规则配置
